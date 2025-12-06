@@ -58,7 +58,7 @@ private:
     // represents graph: LocationID -> List of Edges
     map<int, vector<Edge>> adjList;
 
-    // stores data in map
+    // stores data
     map<string, ClassInfo> allCourseMap;
     map<int, Student> studentMap;
 
@@ -67,20 +67,23 @@ private:
     bool isValidName(const string& name);
     bool isValidClassCode(const string& code);
 
-    // helper function for Dijkstra's algorithm
+    // helper for Dijkstra's algorithm
     pair<map<int, int>, map<int, int>> runDijkstra(int startNode);
+
+    // helper to convert time to minutes
+    int timeToMinutes(const string& time);
 
 public:
     CampusCompass(); // constructor
     bool ParseCSV(const string &edges_filepath, const string &classes_filepath);
     bool ParseCommand(const string &command);
 
-    // required functions for processing commands
-    void insertStudent(string name, int id, int residenceLocationID, vector<string> classes);
-    void removeStudent(int id);
+    // required functions for command processing
+    void insert(string name, int id, int residenceLocationID, vector<string> classes);
+    void remove(int id);
     void dropClass(int id, string classCode);
     void replaceClass(int id, string classCode1, string classCode2);
-    void removeClassFromAll(string classCode);
+    void removeClass(string classCode);
 
     void toggleEdgesClosure(vector<int> locationIDs);
     void checkEdgeStatus(int locationID1, int locationID2);
@@ -88,4 +91,6 @@ public:
 
     void printShortestEdges(int id);
     void printStudentZone(int id);
+
+    void verifySchedule(int id); // extra credit
 };

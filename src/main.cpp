@@ -1,5 +1,4 @@
 #include <iostream>
-
 #include "CampusCompass.h"
 
 using namespace std;
@@ -11,15 +10,19 @@ int main() {
     // ingest CSV data
     compass.ParseCSV("../data/edges.csv", "../data/classes.csv");
 
-    // the below is example code for parsing commandline input
+    // reads number of commands
     int no_of_lines;
     string command;
     cin >> no_of_lines;
-    cin.ignore(); // ignore newline that first cin left over
+    cin.ignore(); // ignores newline left by cin
+
+    // processes each command
     for (int i = 0; i < no_of_lines; i++) {
         getline(cin, command);
 
-        // parse your commands however you see fit
+        // parses and executes command
         compass.ParseCommand(command);
     }
+
+    return 0;
 }

@@ -1,84 +1,130 @@
-#include <catch2/catch_test_macros.hpp>
-#include <iostream>
-
-// change if you choose to use a different header name
-#include "CampusCompass.h"
-
-using namespace std;
-
-// the syntax for defining a test is below. It is important for the name to be
-// unique, but you can group multiple tests with [tags]. A test can have
-// [multiple][tags] using that syntax.
-TEST_CASE("Example Test Name - Change me!", "[tag]") {
-  // instantiate any class members that you need to test here
-  int one = 1;
-
-  // anything that evaluates to false in a REQUIRE block will result in a
-  // failing test
-  REQUIRE(one == 0); // fix me!
-
-  // all REQUIRE blocks must evaluate to true for the whole test to pass
-  REQUIRE(false); // also fix me!
-}
-
-TEST_CASE("Test 2", "[tag]") {
-  // you can also use "sections" to share setup code between tests, for example:
-  int one = 1;
-
-  SECTION("num is 2") {
-    int num = one + 1;
-    REQUIRE(num == 2);
-  };
-
-  SECTION("num is 3") {
-    int num = one + 2;
-    REQUIRE(num == 3);
-  };
-
-  // each section runs the setup code independently to ensure that they don't
-  // affect each other
-}
-
-// You must write 5 unique, meaningful tests for credit on the testing section
-// of this project!
-
-// See the following for an example of how to easily test your output.
-// Note that while this works, I recommend also creating plenty of unit tests for particular functions within your code.
-// This pattern should only be used for final, end-to-end testing.
-
-// This uses C++ "raw strings" and assumes your CampusCompass outputs a string with
-//   the same thing you print.
-TEST_CASE("Example CampusCompass Output Test", "[flag]") {
-  // the following is a "raw string" - you can write the exact input (without
-  //   any indentation!) and it should work as expected
-  // this is based on the input and output of the first public test case
-  string input = R"(6
-insert "Student A" 10000001 1 1 COP3502
-insert "Student B" 10000002 1 1 COP3502
-insert "Student C" 10000003 1 2 COP3502 MAC2311
-dropClass 10000001 COP3502
-remove 10000001
-removeClass COP3502
-)";
-
-  string expectedOutput = R"(successful
-successful
-successful
-successful
-unsuccessful
-2
-)";
-
-  string actualOutput;
-
-  // somehow pass your input into your CampusCompass and parse it to call the
-  // correct functions, for example:
-  /*
-  CampusCompass c;
-  c.parseInput(input)
-  // this would be some function that sends the output from your class into a string for use in testing
-  actualOutput = c.getStringRepresentation()
-  */
-
-  REQUIRE(actualOutput == expectedOutput);
-}
+// #include <catch2/catch_test_macros.hpp>
+// #include <string>
+// #include <vector>
+// #include <sstream>
+// #include <iostream>
+// #include <algorithm>
+// #include "CampusCompass.h"
+//
+// using namespace std;
+//
+// // helper to reset and load data for every test case
+// void setup(CampusCompass& cc) {
+//     if (!cc.ParseCSV("../data/edges.csv", "../data/classes.csv")) {
+//         cc.ParseCSV("data/edges.csv", "data/classes.csv");
+//     }
+// }
+//
+// // Test Case 1: tests at least five incorrect commands
+// TEST_CASE("Test 1: Incorrect Commands", "[flag]") {
+//     // redirects a stringstream to cout - https://stackoverflow.com/questions/4191089/how-to-unit-test-function-writing-to-stdout-stdcout
+//     ostringstream oss;
+//     streambuf* rdbuf = std::cout.rdbuf();
+//     cout.rdbuf(oss.rdbuf());
+//
+//     CampusCompass cc;
+//     setup(cc);
+//
+//     // invalid Name (contains numbers)
+//     cc.ParseCommand("insert \"Pa3r1ck\" 12345678 1 1 COP3530");
+//
+//     // invalid ID (too short)
+//     cc.ParseCommand("insert \"Patrick\" 123 1 1 COP3530");
+//
+//     // invalid Class Count (mismatch between N and provided classes)
+//     cc.ParseCommand("insert \"Patrick\" 12345678 1 2 COP3530");
+//
+//     // invalid Class Code (bad format)
+//     cc.ParseCommand("insert \"Patrick\" 12345678 1 1 badcode");
+//
+//     // unknown Command
+//     cc.ParseCommand("fly 12345678");
+//
+//     cout.rdbuf(rdbuf);
+//     REQUIRE(oss.str() == "unsuccessful\nunsuccessful\nunsuccessful\nunsuccessful\nunsuccessful\n");
+// }
+//
+// // Test Case 2: tests at least three edge cases
+// TEST_CASE("Test 2: Edge Cases", "[edge_cases]") {
+//     ostringstream oss;
+//     streambuf* rdbuf = std::cout.rdbuf();
+//     cout.rdbuf(oss.rdbuf());
+//
+//     CampusCompass cc;
+//     setup(cc);
+//
+//     // removing a student that doesn't exist
+//     cc.ParseCommand("remove 67676767");
+//
+//     // dropping a class a student doesn't have
+//     cc.insert("Patrick Ouano", 12345678, 1, {"COP3530"});
+//     cc.dropClass(12345678, "MAC2311");
+//
+//     // checking edge status for non-existent location
+//     cc.checkEdgeStatus(1, 9999);
+//
+//     cout.rdbuf(rdbuf);
+//     REQUIRE(oss.str() == "unsuccessful\nsuccessful\nunsuccessful\nDNE\n");
+// }
+//
+// // Test Case 3: tests dropClass, removeClass, remove, and replaceClass
+// TEST_CASE("Test 3: Command Functionality", "[commands]") {
+//     ostringstream oss;
+//     streambuf* rdbuf = std::cout.rdbuf();
+//     cout.rdbuf(oss.rdbuf());
+//
+//     CampusCompass cc;
+//     setup(cc);
+//
+//     cc.insert("Patrick Ouano", 67676767, 1, {"COP3530", "MAC2311"});
+//
+//     // replaces COP3530 with CDA3101
+//     cc.replaceClass(67676767, "COP3530", "CDA3101");
+//
+//     // drops MAC2311
+//     cc.dropClass(67676767, "MAC2311");
+//
+//     // removes CDA3101 from all students
+//     cc.removeClass("CDA3101");
+//
+//     // removes the student completely
+//     cc.remove(67676767);
+//
+//     cout.rdbuf(rdbuf);
+//     REQUIRE(oss.str() == "successful\nsuccessful\nsuccessful\n1\nsuccessful\n");
+// }
+//
+// // Test Case 4: tests printShortestEdges
+// TEST_CASE("Test 4: Shortest Path Dynamic Change", "[graph_logic]") {
+//     ostringstream oss;
+//     streambuf* rdbuf = std::cout.rdbuf();
+//     cout.rdbuf(oss.rdbuf());
+//
+//     CampusCompass cc;
+//     setup(cc);
+//
+//     // Scenario:
+//     // Student lives at 43 (Malachowsky Hall)
+//     // Class IDS2935 is at Location 7 (Computer Science & Engineering)
+//     // Edge 43 -> 7 exists with weight 2.
+//
+//     // inserts student
+//     cc.insert("Patrick Ouano", 87654321, 43, {"IDS2935"});
+//
+//     // checks initial path
+//     cc.printShortestEdges(87654321);
+//
+//     // closes the direct edge (43 -> 7) and the indirect edge (43 -> 6)
+//     cc.toggleEdgesClosure({43, 7, 43, 6});
+//
+//     // checks path again (should be -1/unreachable)
+//     cc.printShortestEdges(87654321);
+//
+//     cout.rdbuf(rdbuf);
+//     REQUIRE(oss.str() == "successful\n"
+//                       "Name: Path Finder\n"
+//                       "IDS2935 | Total Time: 2\n"
+//                       "successful\n"
+//                       "Name: Path Finder\n"
+//                       "IDS2935 | Total Time: -1\n");
+// }
