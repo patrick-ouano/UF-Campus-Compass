@@ -1,7 +1,7 @@
 #pragma once
 #include <string>
 #include <vector>
-#include <unordered_map>
+#include <map>
 #include <iostream>
 
 using namespace std;
@@ -10,6 +10,12 @@ struct Edge {
     int to;
     int time;
     bool isOpen;
+
+    Edge(int to, int time, bool isOpen) {
+        this->to = to;
+        this->time = time;
+        this->isOpen = isOpen;
+    }
 };
 
 struct Student {
@@ -17,46 +23,69 @@ struct Student {
     int id;
     int residenceLocationId;
     vector<string> classCodes;
+
+    Student() {
+        this->id = 0;
+        this->residenceLocationId = 0;
+    }
+
+    Student(string name, int id, int residenceLocationId, vector<string> classCodes) {
+        this->name = name;
+        this->id = id;
+        this->residenceLocationId = residenceLocationId;
+        this->classCodes = classCodes;
+    }
 };
 
 struct ClassInfo {
     int locationId;
     string startTime;
     string endTime;
+
+    ClassInfo() {
+        this->locationId = 0;
+    }
+
+    ClassInfo(int locationId, string startTime, string endTime) {
+        this->locationId = locationId;
+        this->startTime = startTime;
+        this->endTime = endTime;
+    }
 };
 
 class CampusCompass {
 private:
-    // Graph representation: LocationID -> List of Edges
-    unordered_map<int, vector<Edge>> adjList;
+    // represents graph: LocationID -> List of Edges
+    map<int, vector<Edge>> adjList;
 
-    // Data storage
-    unordered_map<string, ClassInfo> allCourseMap;
-    unordered_map<int, Student> studentMap;
+    // stores data in map
+    map<string, ClassInfo> allCourseMap;
+    map<int, Student> studentMap;
 
-    // Helpers
+    // helper functions to validate items
     bool isValidId(int id);
     bool isValidName(const string& name);
     bool isValidClassCode(const string& code);
-    pair<unordered_map<int, int>, unordered_map<int, int>> runDijkstra(int startNode);
+
+    // helper function for Dijkstra's algorithm
+    pair<map<int, int>, map<int, int>> runDijkstra(int startNode);
 
 public:
     CampusCompass(); // constructor
     bool ParseCSV(const string &edges_filepath, const string &classes_filepath);
     bool ParseCommand(const string &command);
 
-    // Required functions
-    void insertStudent(string name, int id, int resId, vector<string> classes);
+    // required functions for processing commands
+    void insertStudent(string name, int id, int residenceLocationID, vector<string> classes);
     void removeStudent(int id);
     void dropClass(int id, string classCode);
-    void replaceClass(int id, string oldCode, string newCode);
+    void replaceClass(int id, string classCode1, string classCode2);
     void removeClassFromAll(string classCode);
 
-    void toggleEdgesClosure(vector<int> locations);
-    void checkEdgeStatus(int from, int to);
-    void isConnected(int from, int to);
+    void toggleEdgesClosure(vector<int> locationIDs);
+    void checkEdgeStatus(int locationID1, int locationID2);
+    void isConnected(int locationID1, int locationID2);
 
     void printShortestEdges(int id);
     void printStudentZone(int id);
-
 };
