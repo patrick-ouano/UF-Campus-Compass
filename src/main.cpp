@@ -1,5 +1,6 @@
 #include <iostream>
 #include "CampusCompass.h"
+#include <limits>
 
 using namespace std;
 
@@ -8,13 +9,13 @@ int main() {
     CampusCompass compass;
 
     // ingest CSV data
-    compass.ParseCSV("../data/edges.csv", "../data/classes.csv");
+    compass.ParseCSV("data/edges.csv", "data/classes.csv");
 
     // reads number of commands
     int no_of_lines;
     string command;
     cin >> no_of_lines;
-    cin.ignore(); // ignores newline left by cin
+    cin.ignore(numeric_limits<streamsize>::max(), '\n'); // ignores newline left by cin - https://en.cppreference.com/w/cpp/types/numeric_limits
 
     // processes each command
     for (int i = 0; i < no_of_lines; i++) {

@@ -259,7 +259,7 @@ pair<map<int, int>, map<int, int>> CampusCompass::runDijkstra(int startNode){
     // stores pair of distance and nodes where smallest distance is on top
     priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> pq;
 
-    // initalizes all distances to infinity
+    // initalizes all distances to infinity - used https://en.cppreference.com/w/cpp/types/numeric_limits
     for(auto& mapPair : this->adjList){
         distances[mapPair.first] = numeric_limits<int>::max();
     }

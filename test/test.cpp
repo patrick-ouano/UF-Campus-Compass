@@ -8,13 +8,6 @@
 //
 // using namespace std;
 //
-// // helper to reset and load data for every test case
-// void setup(CampusCompass& cc) {
-//     if (!cc.ParseCSV("../data/edges.csv", "../data/classes.csv")) {
-//         cc.ParseCSV("data/edges.csv", "data/classes.csv");
-//     }
-// }
-//
 // // Test Case 1: tests at least five incorrect commands
 // TEST_CASE("Test 1: Incorrect Commands", "[flag]") {
 //     // redirects a stringstream to cout - https://stackoverflow.com/questions/4191089/how-to-unit-test-function-writing-to-stdout-stdcout
@@ -23,7 +16,7 @@
 //     cout.rdbuf(oss.rdbuf());
 //
 //     CampusCompass cc;
-//     setup(cc);
+//     cc.ParseCSV("data/edges.csv", "data/classes.csv");
 //
 //     // invalid Name (contains numbers)
 //     cc.ParseCommand("insert \"Pa3r1ck\" 12345678 1 1 COP3530");
@@ -51,7 +44,7 @@
 //     cout.rdbuf(oss.rdbuf());
 //
 //     CampusCompass cc;
-//     setup(cc);
+//     cc.ParseCSV("data/edges.csv", "data/classes.csv");
 //
 //     // removing a student that doesn't exist
 //     cc.ParseCommand("remove 67676767");
@@ -74,7 +67,7 @@
 //     cout.rdbuf(oss.rdbuf());
 //
 //     CampusCompass cc;
-//     setup(cc);
+//     cc.ParseCSV("data/edges.csv", "data/classes.csv");
 //
 //     cc.insert("Patrick Ouano", 67676767, 1, {"COP3530", "MAC2311"});
 //
@@ -84,14 +77,11 @@
 //     // drops MAC2311
 //     cc.dropClass(67676767, "MAC2311");
 //
-//     // removes CDA3101 from all students
+//     // removes CDA3101 from all students (student now has 0 classes, so they're auto-removed)
 //     cc.removeClass("CDA3101");
 //
-//     // removes the student completely
-//     cc.remove(67676767);
-//
 //     cout.rdbuf(rdbuf);
-//     REQUIRE(oss.str() == "successful\nsuccessful\nsuccessful\n1\nsuccessful\n");
+//     REQUIRE(oss.str() == "successful\nsuccessful\nsuccessful\n1\n");
 // }
 //
 // // Test Case 4: tests printShortestEdges
@@ -101,12 +91,10 @@
 //     cout.rdbuf(oss.rdbuf());
 //
 //     CampusCompass cc;
-//     setup(cc);
+//     cc.ParseCSV("data/edges.csv", "data/classes.csv");
 //
 //     // Scenario:
-//     // Student lives at 43 (Malachowsky Hall)
-//     // Class IDS2935 is at Location 7 (Computer Science & Engineering)
-//     // Edge 43 -> 7 exists with weight 2.
+//     // Patrick OUano lives at 43 (Malachowsky Hall), IDS2935 is at Location 7 (Computer Science & Engineering), Edge 43 -> 7 exists with weight 2.
 //
 //     // inserts student
 //     cc.insert("Patrick Ouano", 87654321, 43, {"IDS2935"});
@@ -122,9 +110,9 @@
 //
 //     cout.rdbuf(rdbuf);
 //     REQUIRE(oss.str() == "successful\n"
-//                       "Name: Path Finder\n"
+//                       "Name: Patrick Ouano\n"
 //                       "IDS2935 | Total Time: 2\n"
 //                       "successful\n"
-//                       "Name: Path Finder\n"
+//                       "Name: Patrick Ouano\n"
 //                       "IDS2935 | Total Time: -1\n");
 // }
