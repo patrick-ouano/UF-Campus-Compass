@@ -63,7 +63,7 @@ private:
     map<int, Student> studentMap;
 
     // helper functions to validate items
-    bool isValidId(int id);
+    bool isValidId(const string& id);
     bool isValidName(const string& name);
     bool isValidClassCode(const string& code);
 
@@ -79,7 +79,7 @@ public:
     bool ParseCommand(const string &command);
 
     // required functions for command processing
-    void insert(string name, int id, int residenceLocationID, vector<string> classes);
+    void insert(string name, string id, int residenceLocationID, vector<string> classes);
     void remove(int id);
     void dropClass(int id, string classCode);
     void replaceClass(int id, string classCode1, string classCode2);

@@ -95,9 +95,17 @@ bool CampusCompass::ParseCommand(const string &command){
         string name;
         getline(in, name, '"');
 
-        // reads id, residence location, and number of classes
-        int id, residenceLocationID, numClasses;
-        in >> id >> residenceLocationID >> numClasses;
+        // reads id as string first to validate length
+        string idStr;
+        in >> idStr;
+
+        // reads residence location
+        int residenceLocationID;
+        in >> residenceLocationID;
+
+        // reads number of classes
+        int numClasses;
+        in >> numClasses;
 
         // reads all class codes
         vector<string> classes;
@@ -113,7 +121,7 @@ bool CampusCompass::ParseCommand(const string &command){
             return false;
         }
 
-        this->insert(name, id, residenceLocationID, classes);
+        this->insert(name, idStr, residenceLocationID, classes);
     }
     else if(cmd == "remove"){
         int id;
@@ -186,15 +194,13 @@ bool CampusCompass::ParseCommand(const string &command){
 }
 
 // checks if student ID is valid (8 digits)
-bool CampusCompass::isValidId(int id){
-    string idStr = to_string(id);
-
-    if(idStr.length() != 8){
+bool CampusCompass::isValidId(const string& id){
+    if(id.length() != 8){
         return false;
     }
 
     // checks that every character is a digit (0-9)
-    for(char c : idStr){
+    for(char c : id){
         if(!isdigit(c)){
             return false;
         }
@@ -303,12 +309,14 @@ pair<map<int, int>, map<int, int>> CampusCompass::runDijkstra(int startNode){
 }
 
 // inserts a new student to the class(es)
-void CampusCompass::insert(string name, int id, int residenceLocationID, vector<string> classes){
-    // checks if ID is valid
-    if(!this->isValidId(id)){
+void CampusCompass::insert(string name, string idStr, int residenceLocationID, vector<string> classes){
+    // checks if ID is valid (string check)
+    if(!this->isValidId(idStr)){
         cout << "unsuccessful" << endl;
         return;
     }
+
+    int id = stoi(idStr);
 
     // checks if ID exists
     if(this->studentMap.find(id) != this->studentMap.end()){
@@ -693,13 +701,13 @@ void CampusCompass::verifySchedule(int id){
         cout << class1Code << " - " << class2Code << " ";
 
         if(shortestPathTime == -1){
-            cout << "Cannot make it!" << endl;
+            cout << "\"Cannot make it!\"" << endl;
         }
         else if(timeGap >= shortestPathTime){
-            cout << "Can make it!" << endl;
+            cout << "\"Can make it!\"" << endl;
         }
         else{
-            cout << "Cannot make it!" << endl;
+            cout << "\"Cannot make it!\"" << endl;
         }
     }
 }
